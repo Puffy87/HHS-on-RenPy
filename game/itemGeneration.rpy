@@ -915,7 +915,7 @@ init python:
     manpants.cost = 1500
     manpants.picto = 'pic/noimage.gif'
     manpants.type = 'clothing'
-    manpants.description = _('Красные трусы. Неизменный спутник физрука.')
+    manpants.description = _('Неизменный спутник физрука.')
     clothing.append(manpants)
     
     
