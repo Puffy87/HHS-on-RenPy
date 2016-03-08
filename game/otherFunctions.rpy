@@ -9,7 +9,7 @@ init -5 python:
     
     def rand(a, b):
         if a - b >= 0 or b == 0:
-            return 0
+            return a
         else :
             return random.randint(a,b)
 

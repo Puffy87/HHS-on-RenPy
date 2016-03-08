@@ -26,7 +26,7 @@ init -20 python:
             self.parts['ноги'] = BodyPart('ноги', True)
             self.parts['лицо'] = BodyPart('лицо', True)
             self.parts['грудь'] = BodyPart('грудь', True, minSize = 0, maxSize = 10)
-            self.parts['анус'] = BodyPart('анус', minSize = 0, maxSize = 25)
+            self.parts['анус'] = BodyPart('анус', minSize = 0, maxSize = 10)
             self.parts['рот'] = BodyPart('рот')
             self.parts['руки'] = BodyPart('руки', True)
             self.height = height
@@ -72,7 +72,7 @@ init -20 python:
     class FemaleBody(Body):
         def __init__(self, height, bodyparts = {}, anusSize = 0, vaginaSize = 0, breastSize = 0):
             super(FemaleBody, self).__init__(height, bodyparts)
-            self.parts['вагина'] = BodyPart('вагина', minSize = 0, maxSize = 40, size = vaginaSize)
+            self.parts['вагина'] = BodyPart('вагина', minSize = 0, maxSize = 10, size = vaginaSize)
             self.parts['анус'].size = anusSize
             self.parts['грудь'].size = breastSize
 
@@ -756,6 +756,10 @@ init -20 python:
                         self.partner.location = self.location
                         self.partner.forceLocationStatus(applyStatus)
                         movedArray.append(self.partner)
+                    elif applyStatus.name in ['Преподаёт']: # Если учитель преподаёт
+                        modCorr = min(0.1, self.getLoy()/100)
+                        for char in loc.getPeople():
+                            char.incCorr((self.getCorr() - char.getCorr())*modCorr/200)
                     else:
                         self.applyLocationStatus(applyStatus)
                 else:

@@ -926,3 +926,87 @@ label inviteToOffice:
         changetime(10)
         move(curloc)
     
+label do_yoga:
+    $ clrscr()
+    show home
+    if player.stats.energy < 300:
+        player.say 'Я слишком устала, чтобы заниматься йогой.'
+    elif player.getClothPurpose('sport') == False and len(player.getWeared()) != 0:
+        player.say 'Мне будет неудобно в этом заниматься. Надо переодеться в спортивную форму.'
+        python:
+            flag = False
+            for x in player.inventory:
+                if x.type == 'clothing':
+                    if x.purpose == 'sport':
+                        flag = True
+                        break
+        if flag == True:
+            menu:
+                'Сходить и переодеться?'
+                'Да':
+                    $ player.wearingByPurpose('sport')
+                    $ changetime(5)
+                    jump do_yoga
+                'Нет':
+                    pass
+    elif len(player.getWeared()) == 0:
+        if player.getCorr() < 50:
+            player.say 'Я собираюсь заниматься йогой на балконе... На котором меня может увидеть кто угодно. И я не хочу, чтобы кто угодно видел меня голой!'
+        else:
+            show expression 'pic/events/various/yogaNude.png' at left as tempPic
+            'Ничего не стесняясь, вы выходите на балкон и приступаете к занятиям. Ваше обнажённое тело принимает одну позу за другой, демонстрируя случайным свидетелям свою гибкость и красоту.'
+            if rand(1,5) == 1:
+                'Приняв очередную позу, уже вся мокрая от усталости, вы замечаете в окне напротив недвусмысленное шебуршение перед неплотно прикрытой занавеской.'
+                menu:
+                    'Показать себя во всей красе':
+                        if player.getCorr() < 70:
+                            player.say 'Ну нет, на такое я не подписывалась!'
+                            'Вы быстро собираетесь и уходите в дом.'
+                            $ changetime(60)
+                            $ player.incDirty(2)
+                            $ player.stats.energy -= rand(200,400)
+                            $ player.stats.health += rand (10,20)
+                            $ player.stats.health += rand (10,20)
+                        else:
+                            show expression 'pic/events/various/yogaShow1.png' at left as tempPic
+                            'Вы начинаете менять одну позу за другой, выбирая наиболее соблазнительный ракурс. Вскоре ваше тело покрывается потом, а половые губки начинают слегка поблёскивать на солнце от выделяющейся влаги. Вы довольно сильно возбудились от того, что кто то на вас смотрит.'
+                            player.say 'Надо перейти к тренировке мышц влагалища. - тихонько прошептали вы сами себе.'
+                            show expression 'pic/events/various/yogaShow2.png' at left as tempPic
+                            'Вы легли на пол, удостоверившись что с вашей позиции влагалище будет видно из окна и, раздвинув губы пальцами, принялись ритмично напрягать бёдра, вызывая сокращения блестящих стенок киски.'
+                            player.say 'М-м-м... Сегодня это намного приятнее, чем обычно!'
+                            'Вы удвоили усилия, ощущая приятную пульсацию под пальцами, и немного забывшись, прикоснулись к клитору.'
+                            player.say 'О да!!!'
+                            'Ваши пальчики умело запорхали по киске, и вскоре ваша попка промокла от текущих соков так же, как и циновка от пота. Тело выгнулось, вставая на мостик и задрожало в оргазме.\nПереведя дыхание, вы взглянули в окошко, но невидимый свидетель вашего шоу уже удалился или затаился. Вздохнув, вы начали собираться.'
+                            $ changetime(60)
+                            $ player.incDirty(2)
+                            $ player.incCorr(2)
+                            $ player.stats.energy -= rand(200,400)
+                            $ player.stats.health += rand (10,20)
+                            $ player.stats.health += rand (10,20)
+                            if player.body.parts['вагина'].size > 5:
+                                $ player.body.parts['вагина'].size -= 0.05
+                            if player.body.parts['анус'].size > 5:
+                                $ player.body.parts['анус'].size -= 0.05
+                            
+                    'Просто закончить тренировку':
+                        'Не обращая внимания на случайного зрителя, вы скомкано заканчиваете упражнения, запамятовав про позу укрепления нижних мышц, и уходите домой.'
+                        $ changetime(60)
+                        $ player.incDirty(2)
+                        $ player.stats.energy -= rand(200,400)
+                        $ player.stats.health += rand (10,20)
+                        $ player.stats.health += rand (10,20)
+    else:
+        show expression 'pic/events/various/yoga.png' at left as tempPic
+        'Вы разложили коврик на балконе и приступили к серии упражнений на растяжку и укрепление мышц. Через час вы наконец приняли последнюю позу для укрепления мышц влагалища и, постояв в ней несколько минут, шумно выдохнули. Ваше тело дрожало от напряжения, но вы чувствовали, что оно стало сильнее.'
+        if rand(1,10) == 1:
+            'Вы замечаете, что в окне напротив быстро задёргивается занавеска, словно кто то наблюдал за вами всё время, пока вы занимались.'
+        $ changetime(60)
+        $ player.incDirty(2)
+        $ player.stats.energy -= rand(200,400)
+        $ player.stats.health += rand (10,20)
+        $ player.stats.health += rand (10,20)
+        if player.body.parts['вагина'].size > 5:
+            $ player.body.parts['вагина'].size -= 0.05
+        if player.body.parts['анус'].size > 5:
+            $ player.body.parts['анус'].size -= 0.05
+    $ move(curloc)

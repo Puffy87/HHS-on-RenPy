@@ -318,11 +318,11 @@ init 10 python:
 
                 elif x == 'loc_hall': loc = Location(id = x, name = 'холл', base_prob = 5, position = ['school'])
                 elif x == 'loc_dungeon': loc = Location(id = x, name = 'подвал', base_prob = -1, position = ['school'])
-                elif x == 'loc_entrance': loc = Location(id = x, name = 'вход', base_prob = 10, position = ['school'])
+                elif x == 'loc_entrance': loc = Location(id = x, name = 'вход', base_prob = 20, position = ['school'])
                 elif x == 'loc_library': loc = Location(id = x, name = 'библиотека', base_prob = 10, position = ['school'])
                 elif x == 'loc_changeRoom': loc = Location(id = x, name = 'школьная раздевалка', base_prob = 5, position = ['school','safe','change'])
-                elif x == 'loc_gym': loc = Location(id = x, name = 'спортивный зал', base_prob = 20, position = ['school','classroom','sport'])
-                elif x == 'loc_pool': loc = Location(id = x, name = 'бассейн', base_prob = 20, position = ['school','classroom','swim'])
+                elif x == 'loc_gym': loc = Location(id = x, name = 'спортивный зал', base_prob = 15, position = ['school','classroom','sport'])
+                elif x == 'loc_pool': loc = Location(id = x, name = 'бассейн', base_prob = 15, position = ['school','classroom','swim'])
                 elif x == 'loc_firstFloor': loc = Location(id = x, name = 'первый этаж', base_prob = 20, position = ['school'])
                 elif x == 'loc_secondFloor': loc = Location(id = x, name = 'второй этаж', base_prob = 20, position = ['school'])
                 elif x == 'loc_class1': loc = Location(id = x, name = 'Класс 1', base_prob = 10, position = ['school','classroom'])
@@ -559,7 +559,8 @@ label loc_home:
             ('Кухня', Function(move, 'loc_kitchen'), True),
             ('Спальня', Function(move, 'loc_bedroom'), True),
             ('Ванная', Function(move, 'loc_bathroom'), True),
-            ('Улица', Function(move, 'loc_street'), True)
+            ('Улица', Function(move, 'loc_street'), True),
+            ('{i}Заниматься йогой{/i}', Jump('do_yoga'), player.hasItem(mat.name))
             ]
         loc_txt = ['Гостиная в вашей квартире. Маленькая, зато аккуратная. На стеклянном столе лежит пачка салфеток для ежедневного ухода за кожей. ']
         loc_txt += ['Напротив диванчика стоит телевизор. Вы не помните, чтобы по нему хоть раз показывали что-то хорошее. Возможно потому, что потеряли пульт сразу после переезда.']
@@ -578,8 +579,8 @@ label loc_bedroom:
         loc_btn = [
             ('Гостиная', Function(move, 'loc_home'), True),
             ('{i}Переодеться{/i}', Show('wardrobe'), True),
-            ('{i}Спать{/i}', Jump('sleep'), ((ptime - last_sleeped >= 4) or (player.stats.energy < player.stats.health/4))),
-            ('{i}Мастурбировать{/i}', Jump('startMastur'), (player.getLust() > 0))
+            ('{i}Спать{/i}', Jump('sleep'), ((ptime - last_sleeped >= 4) or (player.getEnergy() < player.getHealth()/4))),
+            ('{i}Мастурбировать{/i}', Jump('startMastur'), ((player.getLust() > 0) and (player.getEnergy() > 100)))
             ]
         loc_txt = ['Уютненькая маленькая спальня. Слева находится небольшой шкаф, в котором висит ваша повседневная одежда. Справа кровать, довольно удобная. Тут ещё есть телевизор, но он не работает, так что совсем не будет мешать Вам отходить ко сну.']
     screen bedroom:

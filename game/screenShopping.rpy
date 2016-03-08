@@ -19,6 +19,7 @@ screen shopping:
                     textbutton napkin.name action [Function(player.buy, napkin), Show('showSellItem')] hovered [SetVariable('myItem', napkin), Show('showSellItem')]
                     textbutton eDrink.name action [Function(player.buy, eDrink), Show('showSellItem')] hovered [SetVariable('myItem', eDrink), Show('showSellItem')]
                     textbutton rawFood.name action [Function(player.buy, rawFood), Show('showSellItem')] hovered [SetVariable('myItem', rawFood), Show('showSellItem')]
+                    textbutton mat.name action [Function(player.buy, mat), Show('showSellItem')] hovered [SetVariable('myItem', mat), Show('showSellItem')]
                     if is_camera == 3:
                         textbutton camera.name action [Function(player.buy, camera,'add'), Show('showSellItem')] hovered [SetVariable('myItem', camera), Show('showSellItem')]
             frame :

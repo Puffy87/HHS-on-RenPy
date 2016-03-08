@@ -164,11 +164,37 @@ init 11 python:
     pre_teach_status = LocationStatus('Готовится к уроку', None, 'any', char_type = 'teacher', stats_actions = {'fun':(0.1,30),'education':(0.1, 80)}) # статус для свободного учителя
     teacher_hidden_mastur = LocationStatus('Мастурбирует', None, 'any', char_type = 'teacher', events = ['status_teacherHidden_mastur'], requirements = {'lust':60}, stats_actions = {'lust':(-100,0),'corr':(1,20),'fun':(1,30)})
     
+    # Репутационные действия:
+    entrance_speak = LocationStatus('Говорит с прохожим', None, 'any', char_type = 'student', 
+        stats_actions = {'lust':(1,30), 'fun':(1,30)})
+        
+    entrance_flirt = LocationStatus('Флиртует с прохожим', None, 'any', char_type = 'student', 
+        events = ['status_entrance_flirt'],
+        requirements = {'corr': 20},
+        stats_actions = {'lust':(1,60), 'fun':(1,50), 'reputation':(-0.5,30)})
+    
+    entrance_kiss = LocationStatus('Целуется с кем-то', None, 'any', char_type = 'student', 
+        events = ['status_entrance_kiss'],
+        requirements = {'corr': 35},
+        stats_actions = {'lust':(1,80), 'fun':(1,60), 'reputation':(-1,0)})
+        
+    entrance_petting = LocationStatus('Почти что трахается с кем-то', None, 'any', char_type = 'student', 
+        events = ['status_entrance_petting'],
+        requirements = {'corr': 55},
+        stats_actions = {'lust':(1,80), 'fun':(1,60), 'reputation':(-5,0)})
+        
+    entrance_sex = LocationStatus('Трахается с кем-то', None, 'any', char_type = 'student', 
+        events = ['status_entrance_sex'],
+        requirements = {'corr': 75},
+        stats_actions = {'lust':(1,80), 'fun':(1,60), 'reputation':(-10,0)})
+        
+        
+        
 init 11 python:
     def lookSelector():
         if 'strict' == school.uniform:
             return look_strict_status
-        elif 'unifrom' == school.uniform:
+        elif 'uniform' == school.uniform:
             return look_uniform_status
         elif 'usual' == school.uniform:
             return look_usual_status
@@ -247,7 +273,15 @@ init 11 python:
                 
             if loc.id in ['loc_doctor']:
                 loc.addStatus(medexam_status) # Проходит медосмотр
-                
+            
+            if loc.id in ['loc_entrance']:
+                if 'wall' not in school.buildings:
+                    loc.addStatus(entrance_speak)
+                    loc.addStatus(entrance_flirt)
+                    loc.addStatus(entrance_kiss)
+                    loc.addStatus(entrance_petting)
+                    loc.addStatus(entrance_sex)
+            
             if 'classroom' in loc.position:
                 if lt() > 0:
                     loc.eraseStatuses() # Сносим статусы
@@ -277,7 +311,7 @@ init 11 python:
     statusDistribution()
 
     
-label status_wc: # Complete
+label status_wc:
     if interactionObj.getSex() == 'female':
         show expression 'pic/status/pee_female.png'
     elif interactionObj.getSex() == 'male':
@@ -288,7 +322,7 @@ label status_wc: # Complete
     $ interactionObj.incLoy(-1)
     $ move(curloc)
     
-label status_swim: # Complete
+label status_swim: 
     if interactionObj.getSex('mf') == 'female':
         show expression 'pic/status/swim_female.jpg'
         '[interactionObj.name] купается. Вам не докричаться до неё.'
@@ -297,7 +331,8 @@ label status_swim: # Complete
         '[interactionObj.name] плавает. Вам не докричаться до него.'
     $ move(curloc)
     
-label status_hidden_mastur: # Complete
+# Complete
+label status_hidden_mastur: 
     if curloc in ['loc_wcf','loc_wcm']:
         if interactionObj.getSex() == 'futa':
             show expression 'pic/status/futa_toilet_mastur.jpg'
@@ -331,7 +366,7 @@ label status_hidden_mastur: # Complete
                             'Вы выбрасываете трусики в ближайшую мусорку.'
                 'Дать ей кончить':
                     hide tempPic
-                    'Вы прикрываете дверь, и из-за неё слышутся приглушённые стоны и судорожное шуршание ног по полу. Похоже, что у девочки всё получилось!'
+                    'Вы прикрываете дверь, и из-за неё слышатся приглушённые стоны и судорожное шуршание ног по полу. Похоже, что у девочки всё получилось!'
                     $ interactionObj.moveToLocation(choice(locations).id)
         else:
             show expression 'pic/status/male_toilet_mastur.png' as tempPic
@@ -344,18 +379,19 @@ label status_hidden_mastur: # Complete
         if interactionObj.getSex() == 'male':
             show expression 'pic/status/male_class_mastur.jpeg' as tempPic
             'Не обращая ни на кого внимания (кроме, разве что, своей симпатичной соседки), [interactionObj.name] ласкает своего дружка прямо во время занятий!'
-            'Вы уже хотели сделать ему замечание, но лёгкий стук капель по полу известил вас, что всё уже кончено. Удовлетворённый мальчишка, сбросивший мучавшее его напряжение вновь вернулся к занятиям.'
+            'Вы уже хотели сделать ему замечание, но лёгкий стук капель по полу известил вас, что всё уже кончено. Удовлетворённый мальчишка, сбросивший мучившее его напряжение вновь вернулся к занятиям.'
         elif interactionObj.getSex() == 'female':
             show expression 'pic/status/female_class_mastur.jpg' as tempPic
-            '[interactionObj.fname] мелко взрагивает, кончая прямо на уроке, с её губ срывается лёгкий стон, который остаётся незамечанным всеми, кроме вас.'
+            '[interactionObj.fname] мелко взрагивает, кончая прямо на уроке, с её губ срывается лёгкий стон, который остаётся незамеченным всеми, кроме вас.'
         else:
             show expression 'pic/status/futa_class_mastur.jpg' as tempPic
-            'Вы только и успеваете заметить, как [interactionObj.fname] вздрагиает и убирает руку от юбки, по которой расплывается влажное пятно спермы.'
+            'Вы только и успеваете заметить, как [interactionObj.fname] вздрагивает и убирает руку от юбки, по которой расплывается влажное пятно спермы.'
     $ changetime(10)
     $ player.incLust(15)
     $ move(curloc)
     
-label status_mastur: # Complete
+# Complete
+label status_mastur: 
     if interactionObj.getSex() == 'female':
         'Со всех сторон слышны крики: "Давай, ты сможешь ещё один, давай же!"'
         show expression 'pic/status/female_mastur.png' as tempPic
@@ -373,12 +409,13 @@ label status_mastur: # Complete
         'С этими словами, девушка достаёт из сумки розовый и продолговатый предмет и спешно снимает с себя трусики, под которыми оказывается торчащий колом член.'
         '[interactionObj.name], дрожа от нетерпения, засовывает свой член в узенькую дырочку искусственной вагины. Её лицо искажает сладострастие, и, активно двигая бёдрами и руками, девочка начинает трахать свою игрушку.'
         'Движения ученицы становятся всё дёрганнее и нетерпеливей, и вот уже первая струйка спермы вырывается с кончика пениса, звонко плюхаясь на пол.'
-        '[interactionObj.fname] ещё вздрагивает пару раз и неспеша упаковывает свою игрушку в портфель.'
+        '[interactionObj.fname] ещё вздрагивает пару раз и не спеша упаковывает свою игрушку в портфель.'
         $ changetime(10)
     $ player.incLust(15)
     $ move(curloc)
     
-label status_public_mastur: # Incomplete. Futa, male.
+# Incomplete. Futa, male.
+label status_public_mastur: 
     if interactionObj.getSex() == 'female':
         show expression 'pic/status/female_public_mastur.jpg' as tempPic
         '[interactionObj.fname] мастурбирует, сидя на лавочке. Она совершенно никого не стесняется, и из её молодой киски капают соки, заливая злополучное место для для отдыха и асфальт.'
@@ -402,17 +439,17 @@ label status_public_mastur: # Incomplete. Futa, male.
     $ player.incLust(15)
     $ move(curloc)
     
-label status_voleyball: # Complete
+label status_voleyball:
     show expression 'pic/status/volleyball.jpg' as tempPic
     '[interactionObj.name] играет с другими ребятами в пляжный волейбол. Вы не хотите мешать.'
     $ move(curloc)
     
-label status_football: # Complete
+label status_football: 
     show expression 'pic/status/football.jpg' as tempPic
     '[interactionObj.name] играет с другими ребятами в футбол. Вы не хотите мешать.'
     $ move(curloc)
     
-label status_kiss: # Complete
+label status_kiss: 
     if interactionObj.getSex('mf') != interactionObj.partner.getSex('mf'):
         show expression 'pic/status/kiss_getero.jpg' as tempPic
     else:
@@ -424,8 +461,9 @@ label status_kiss: # Complete
     $ changetime(10)
     $ player.incLust(5)
     $ move(curloc)
-
-label status_undress: # Complete
+    
+# Complete
+label status_undress: 
     if interactionObj.getSex() == 'male':
         show expression 'pic/status/boy_undress.png' as tempPic
         '[interactionObj.name] просит вас не мешать переодеваться.'
@@ -435,11 +473,12 @@ label status_undress: # Complete
     else:
         show expression 'pic/status/futa_undress.png' as tempPic
         '[interactionObj.name] просит вас не мешать переодеваться.'
-        'Вы почему-то никак не можете выбросить её эрегированный член из головы. Это ведь так естествнно. Или нет?'
+        'Вы почему-то никак не можете выбросить её эрегированный член из головы. Это ведь так естественно. Или нет?'
         $ player.incLust(5)
     $ move(curloc)
     
-label status_useManec: # Complete
+# Complete
+label status_useManec: 
     if interactionObj.getSex() == 'male':
         show expression 'pic/status/male_manec.png' as tempPic
         '[interactionObj.name] активнейшим образом изучает внутреннее устройство женского организма, путём введения своего щупа непосредственно в искусственное влагалище купленного вами манекена.'
@@ -447,7 +486,7 @@ label status_useManec: # Complete
         show expression 'pic/status/female_manec.png' as tempPic
         'Не сдержавшись, [interactionObj.name] всё таки решила испробовать столь подробно описанный на уроках биологии мужской орган. И сейчас, слегка напрягаясь от вхождения точной копии члена в свою киску, она осторожно неумело двигает бёдрами, пытаясь доставить себе удовольствие.'
         'Через минутку движения становятся более естественными. Похоже, что смазанный членозаменитель перестал доставлять ученице дискомфорт.'
-        'По классу разносятся влажные хлюпания истекающей смазкой киски. [interactionObj.fname] прикрывает глаза, полностью отдаваясь наслаждению.'
+        'По классу разносятся влажные хлюпанья истекающей смазкой киски. [interactionObj.fname] прикрывает глаза, полностью отдаваясь наслаждению.'
         show expression 'pic/status/female_manec_cum.png' as tempPic
         'Ого! Похоже, анатомичность манекена просто зашкаливает!'
         'Просто в момент, когда стенки влагалища девчушки начали сокращаться в оргазме, копия детородного органа незамедлительно выпустила из себя заменитель спермы, чем удивила и вас, и учениицу.'
@@ -459,7 +498,7 @@ label status_useManec: # Complete
             ease  10.0 yalign 0.0
             repeat
         'Вы видите, как [interactionObj.fname], отделив голову манекена, плюёт ему в рот и тут же вводит в открытый рот свой торчащий от возбуждения член.'
-        'Её рот приоткрывается в экстазе, а движения становятся всё глубже и учащённей. Взирая на это, вы всерьёз начинаете опасаться, не будет ли после этого у манекена вечно удивлённое выражение с незакрывающимся ртом в виде буквы О. Но вспомнив для каких целей вы их приобрели, вы успокаиваетесь.'
+        'Её рот приоткрывается в экстазе, а движения становятся всё глубже и учащённей. Взирая на это, вы всерьёз начинаете опасаться, не будет ли после этого у манекена вечно удивлённое выражение с не закрывающимся ртом в виде буквы О. Но вспомнив для каких целей вы их приобрели, вы успокаиваетесь.'
         'Чего нельзя сказать о девушке. Она, наоборот, возбуждается всё сильнее, двигая бёдрами с такой силой и скоростью, словно пытается пронзить манекен насквозь. Вы видите, что теперь он увлажнён не только первоначальным плевком, но и выделенной подрагивающим членом смазкой.'
         'Между ног ученицы ритмично покачивается капелька с её женского начала. Немного сменив ракурс, вы замечаете блестящие половые губки и слегка сокращающуюся вагину. Вы готовы поставить 100 монет на то, что в ближайшие пару секунд она кончит.'
         show expression 'pic/status/futa_maneca.jpg':
@@ -474,7 +513,8 @@ label status_useManec: # Complete
     $ changetime(10)
     $ move(curloc)
     
-label status_useDildo: # Complete.
+# Complete.
+label status_useDildo: 
     if interactionObj.getSex() == 'female':
         show expression 'pic/status/female_toy.png' as tempPic
         '[interactionObj.name] тестирует вибратор, про который столько долго рассказывали на уроках секспросвета.'
@@ -501,7 +541,7 @@ label status_useDildo: # Complete.
             ease  10.0 yalign 1.0
             ease  10.0 yalign 0.0
             repeat
-        'Вскоре к первой струйке присоединяется вторая, и вот уже член бешенно пульсирует, стукаясь головкой об парту и наполняя средство контрацепции бурными потоками спермы. [interactionObj.fname] чудом не вскрикивает на всю школу, закусывая нижнюю губу от сладострастия.'
+        'Вскоре к первой струйке присоединяется вторая, и вот уже член бешено пульсирует, стукаясь головкой об парту и наполняя средство контрацепции бурными потоками спермы. [interactionObj.fname] чудом не вскрикивает на всю школу, закусывая нижнюю губу от сладострастия.'
         'Вы довольно улыбаетесь, наслаждаясь увиденными моментами.'
     else:
         show expression 'pic/status/male_toy.jpg':
@@ -514,7 +554,8 @@ label status_useDildo: # Complete.
     $ player.incLust(5)
     $ move(curloc)
     
-label status_teacherHidden_mastur: # Complete
+# Complete
+label status_teacherHidden_mastur: 
     if interactionObj.getSex() == 'male':
         show expression 'pic/status/ahmed_mastur.png' as tempPic
         'Заглянув в мужскую кабинку, вы увидели, как Ахмед пытается снять накопившееся за день напряжение. Вы засматриваетесь на его мускулистое тело и плавные движения руки, втайне мечтая присоединиться к этому празднику сластолюбия.'
@@ -523,7 +564,7 @@ label status_teacherHidden_mastur: # Complete
         show expression 'pic/status/futa_teacher_mastur.jpg' as tempPic
         'Услышав стоны из кабинки, вы решили в неё заглянуть. К вашему удивлению, это оказалась не одна из ваших учениц, как обычно, а одна из ваших учительниц.'
         '[interactionObj.name] сидела на унитазе и, широко раздвинув ноги, буквально трахала собственную руку. Пальцы учительницы были все перемазаны в выделившемся с кончика головки эякуляте, но вытирать их она и не думала.'
-        'Плотно обхватив свой мужской орган, столь органично смотряшийся на женском теле, [interactionObj.fname] вращательными движениями ласкала красную от возбуждения головку.'
+        'Плотно обхватив свой мужской орган, столь органично смотрящийся на женском теле, [interactionObj.fname] вращательными движениями ласкала красную от возбуждения головку.'
         interactionObj.say 'М-м-м, как хорошо! Как же я долго ждала окончания этого чёртового урока!'
         'Движения руки становились всё беспорядочней и быстрее, и вдруг, выгнувшись дугой и чуть не свалившись с унитаза, учительница исторгла из себя громкий стон и несколько струй спермы. Тяжело дыша, она откинулась на бачок и начала приводить себя в порядок.'
     else:
@@ -540,15 +581,16 @@ label status_teacherHidden_mastur: # Complete
     $ changetime(10)
     $ move(prevloc)
         
-    
-label status_watchVideo: # Incomplete. Add more Video.
+# Incomplete. Add more Video.
+label status_watchVideo: 
     show expression 'pic/status/video_porn1.jpg' as tempPic
     '[interactionObj.name] смотрит порно с обилием больших членов, спермы и миловидных личиков.'
     'Вы ненадолго тоже задерживаете свой взгляд на экране. Действительно, все диалоги происходят на английском. Правда, их немного.'
     $ player.incLust(10)
     $ move(curloc)
     
-label status_hidden_sex: # Complete
+# Complete
+label status_hidden_sex: 
     if (interactionObj.getSex() == 'male' and interactionObj.partner.getSex() == 'female') or (interactionObj.getSex() == 'female' and interactionObj.partner.getSex() == 'male'):
         python:
             if interactionObj.getSex() == 'male':
@@ -560,7 +602,7 @@ label status_hidden_sex: # Complete
         'Вас привлёк странный хлюпающий звук из одной кабинки. Вы решили заглянуть в неё.'
         'Зайдя в соседнюю кабинку, вы опустились на колени, чтобы удовлетворить своё любопытство.'
         show expression 'pic/status/getero_sex.png' as tempPic
-        'На ваших глазах, [interactionObj.name] и [interactionObj.partner.name] самозабвенно совокуплялись буквально в полуметре от вас.'
+        'На ваших глазах, [interactionObj.name] и [interactionObj.partner.name] самозабвенно совокуплялись буквально в полу метре от вас.'
         'Вы даже не удивились, поняв, что причина привлёкших вас звуков - влажная киска ученицы, в которую, словно молотом, забивал свой член парень.'
         st2.say 'О, да! Давай, сжимай его сильнее! Твоя киска такая узенькая, словно свёрнутое в рулон полотенце! - мальчик сделал сомнительный комплимент своей девушке.'
         st1.say 'Заткнись! М-м-м! Дурак!'
@@ -620,7 +662,7 @@ label status_hidden_sex: # Complete
         $ st1 = interactionObj
         $ st2 = interactionObj.partner
         st1.say '[st2.fname], я тебя хочу!'
-        'От этого милого голосочка по вашей коже незамедлительно побежали мурашки, и вы прильнули к щели ближайшей кабинки, чтобы рассмотреть происходящее.'
+        'От этого милого голоска по вашей коже незамедлительно побежали мурашки, и вы прильнули к щели ближайшей кабинки, чтобы рассмотреть происходящее.'
         show expression ('pic/status/yuri_sex.jpg'):
             xalign 1.0 yalign 0.0
             ease  10.0 yalign 1.0
@@ -643,7 +685,8 @@ label status_hidden_sex: # Complete
     $ changetime(10)
     $ move(prevloc)
     
-label status_sex: # Complete
+# Complete  
+label status_sex: 
     if (interactionObj.getSex() == 'male' and interactionObj.partner.getSex() == 'female') or (interactionObj.getSex() == 'female' and interactionObj.partner.getSex() == 'male'):
         python:
             if interactionObj.getSex() == 'male':
@@ -654,9 +697,9 @@ label status_sex: # Complete
                 st2 = interactionObj.partner
         show expression 'pic/status/getero_school_sex.jpg' as tempPic
         'Молодая пара совокуплялась прямо на ваших глазах, слабо обращая внимания на окружающих. Они были полностью погружены в чувства друг друга. И не только.'
-        'С влажным хлюпанием [st2.name] доставал свой член из щёлки подруги и вгонял его назад. Ритмичные движения его бёдер и громкие стоны ученицы заставили облизать вас губы от вожделения.'
+        'С влажным хлюпаньем [st2.name] доставал свой член из щёлки подруги и вгонял его назад. Ритмичные движения его бёдер и громкие стоны ученицы заставили облизать вас губы от вожделения.'
         st1.say 'Трахай меня, [st2.fname], вытрахай из меня всю похоть! Дааа!'
-        'И парень продолжал трахать, невзирая ни на что. Темп его движений всё возрастал, хлюпания и стоны становились всё громче.'
+        'И парень продолжал трахать, невзирая ни на что. Темп его движений всё возрастал, хлюпанья и стоны становились всё громче.'
         st2.say 'Внутрь или наружу? - спросил [st2.fname], ни на секунду не останавливая движений.'
         st1.say 'В меня! Я хочу, чтобы ты кончил в меня!'
         show expression 'pic/status/getero_school_sex_cum.jpg' as tempPic
@@ -684,7 +727,7 @@ label status_sex: # Complete
         'Не обращая никакого внимания на слова, доносящиеся снизу, [st2.fname] продолжала вбивать свой недетский орган в горячее лоно. С влажного от слюней члена начали капать густые капли смазки.'
         st2.say 'Как же хорошо!'
         st1.say 'Да! Да! Да! Не останавливайся, [st2.fname]! Только не останавливайся!'
-        'Фута задрала ножки подруги ещё выше и, уперевшись руками в бёдра, резко увеличила темп и амплитуду движений. Теперь стало сложно уследить за резкими движениями члена, но было видно, как на нём набухла синяя венка, предвещающая скорый оргазм.'
+        'Фута задрала ножки подруги ещё выше и, упершись руками в бёдра, резко увеличила темп и амплитуду движений. Теперь стало сложно уследить за резкими движениями члена, но было видно, как на нём набухла синяя венка, предвещающая скорый оргазм.'
         show expression 'pic/status/school_futa_female_cum.jpg' as tempPic
         st1.say 'Я сейчас кончу, кончу, не останавливайся, кончу! КОНЧАЮ!!!'
         'В ответ на усиленную стимуляцию члена пульсирующей в оргазме киской, [st2.fname] вздрогнула и, засадив пенис поглубже, разрядилась в глубине влагалища. Не поместившееся в нём семя начало стекать с краёв щёлки.'
@@ -755,7 +798,8 @@ label status_sex: # Complete
     $ changetime(10)
     $ move(curloc)
     
-label status_public_sex: # Incomplete. Male-futa. Female-futa. Futa-futa. Female-Female.
+# Incomplete. Male-futa. Female-futa. Futa-futa. Female-Female.   
+label status_public_sex: 
     if (interactionObj.getSex() == 'male' and interactionObj.partner.getSex() == 'female') or (interactionObj.getSex() == 'female' and interactionObj.partner.getSex() == 'male'):
         python:
             if interactionObj.getSex() == 'male':
@@ -766,7 +810,7 @@ label status_public_sex: # Incomplete. Male-futa. Female-futa. Futa-futa. Female
                 st2 = interactionObj.partner
         show expression 'pic/status/public_getero_sex.png' as tempPic
         st1.say 'Да, [st1.fname], да! Трахни мою развратную попку! Сделай хорошо своей шлюшке!'
-        'Вы немного шокированно смотрите на трахающуюся у всех на глазах парочку. Член парня упрямо вгрызался в поддатливое колечко ануса ученицы, издавая срамные звуки.'
+        'Вы немного шокированно смотрите на трахающуюся у всех на глазах парочку. Член парня упрямо вгрызался в податливое колечко ануса ученицы, издавая срамные звуки.'
         '[st1.fname] призывно оттопыривала попку, немного двигаясь навстречу пенису, а её пальчики теребили истекающую соком киску. Вы не уверены, но вам кажется, что парень уже не первый раз собирается кончить. По крайней мере, у вас нет другого объяснения тому, что ученица движениями своих пальцев выталкивает капли белесой жидкости прямо на асфальт.'
         menu:
             'Охладить их пыл':
@@ -807,3 +851,74 @@ label status_kupruvna_clean:
     $ player.incLust(10)
     $ move(curloc, 15)
     
+    
+label status_entrance_flirt:
+    show entrance
+    $ st1 = interactionObj
+    if st1.getSex() == 'male':
+        '[st1.fname] стоит и флиртует с какой то женщиной прямо у стен школы. Всё бы ничего, но если так пойдёт и дальше, скоро все будут знать, что вы позволяете ученикам флиртовать, а то и больше!'
+    else:
+        '[st1.fname] стоит и флиртует с каким то мужчиной прямо у стен школы. Всё бы ничего, но если так пойдёт и дальше, скоро все будут знать, что вы позволяете ученикам флиртовать, а то и больше!'
+    player.say '[st1.name]! Подойди сюда пожалуйста! - вы бесцеремонно прерываете разговор парочки и ждёте, пока ваш подопечный подойдёт к вам.'
+    $ st1.incRep(0.5)
+    call screen show_stat
+    
+label status_entrance_kiss:
+    show entrance
+    $ st1 = interactionObj
+    if st1.getSex() == 'male':
+        show expression ('pic/status/entrance_kissM.jpg') as tempPic
+        'Видимо применив всё своё обаяние, [st1.fname] соблазнил незнакомку и слился с ней в долгом поцелуе прямо возле вашей школы!'
+        player.say '"Мне надо построить стену, если я хочу, чтобы подобное поведение прекратилось. Оно довольно сильно бьёт по репутации."'
+    else:
+        show expression ('pic/status/entrance_kissF.jpg') as tempPic
+        '[st1.fname] слилась в страстном поцелуе с каким то незнакомцем прямо напротив вашей школы!'
+        player.say '"И все прохожие видят, что она творит... Надо построить стену, чтобы избежать преждевременного увольнения..."'
+    'Не дожидаясь, пока эти заигрывания увидят пол города, вы окликаете своего ученика и красноречивым жестом отправляете его назад в школу.'
+    $ move(curloc, 15)
+    
+label status_entrance_petting:
+    show entrance
+    $ st1 = interactionObj
+    if st1.getSex() == 'male':
+        show expression ('pic/status/entrance_pettingM.jpg') as tempPic
+        '[st1.name] прижал какую то женщину к школьной ограде и пытался удовлетворить её с помощью пальцев и языка. На ваш взгляд весьма успешно!'
+        female 'Да, [st1.fname], да! Доставь мне удовольствие, не останавливайся!'
+        'Пальцы парня и не думали останавливаться, порхая по обнажённой киски женщины, в то время как другая рука тискала её налитую грудь.'
+        female 'О-о-о-о! - женщина испустила протяжный стон и тихо задрожала, обмякнув в ловких руках парня.'
+        female 'А у тебя действительно волшебные руки, не обманули... Держи. - её женская ручка вложила смятую банкноту во влажную ладонь парня.'
+    else:
+        show expression ('pic/status/entrance_pettingF.jpg') as tempPic
+        st1.say 'Ну же, дяденька, давайте! Мне ещё заниматься сегодня надо, поторопитесь!'
+        'Немного шокировано вы наблюдаете, как [st1.fname] дрочит какому то незнакомцу.'
+        st1.say 'Вот так! Выплёскивайте своё молочко, не стесняйтесь! Залейте мою ручку своё грязной спермой!'
+        'Мужчина напрягся, его бёдра задёргались в такт движениям школьницы и запульсировавший член выплеснул несколько струек прямо на школьницу.'
+        st1.say 'Мои 200 монет, пожалуйста? - ученица требовательно протянула заляпанную спермой руку и вскоре довольно сжимая купюры отправилась в школу.'
+    player.say '"Однако... Интересно, как долго продержится моя репутация, если кто то узнает о том, что мои подопечные занимаются подобным за деньги?"'
+    $ player.incLust(10)
+    $ move(curloc, 15)
+    
+label status_entrance_sex:
+    show entrance
+    $ st1 = interactionObj
+    if st1.getSex() == 'male':
+        show expression ('pic/status/entrance_sexM.jpg') as tempPic:
+            xalign 1.0 yalign 0.0
+            ease  10.0 yalign 1.0
+            ease  10.0 yalign 0.0
+            repeat
+        female 'Да! Трахай меня, [st1.fname]! Трахай!'
+        'Выйдя прогуляться, вы увидели как ваш ученик [st1.name] сношает какую то женщину прямо напротив школы! Благо дело происходит в небольшой подворотне и почти никто не обращает на это внимания. Ключевое слово здесь почти!'
+        st1.say 'Ух. Ух. Ух. - парень шумно вздыхал каждый раз, когда засаживал свой член во влагалище женщины. Её соки капали на асфальт и под предающейся страсти парочкой уже начала образовываться небольшая лужица.'
+        female 'Кончай, кончай в меня! Я больше не могу! Наполни меня свой спермой, грязный мальчишка! - её тело выгнулось под немыслимым углом и губы впились в рот мальчика. Одновременно вы заметили, как к прозрачной смазке, капающей с блестящих губ, добавились белые капли, выталкиваемые крепким членом.'
+    elif st1.getSex() == 'female':
+        show expression ('pic/status/entrance_sexF.jpg') as tempPic
+        st1.say 'Ну давай же, грязный извращенец! Заполни мою киску своим молочком! - бёдра девушки начали ещё активней двигаться, насаживая тугую киску на член этого мужика до предела.'
+        player.say '"И с кем это она интересно так страстно трахается?" - вы хотели уже было прервать это безудержное соитие, но подумали, что ваши крики только привлекут ещё больше внимания.'
+        st1.say 'Да! Да! Да! - девушка отдавалась незнакомцу со всей возможной страстью. Ещё щёки и грудь раскраснелись, выдавая сильное возбуждение, а из киски доносилось срамное хлюпанье, словно какая то труженица взбивала масло. Наконец мужчина не выдержал и, сильно прижав к себе юное тело, впустил в него своё семя.'
+        st1.say 'Грязный, грязный извращенец... Ах... Противный... - девушка тяжело дышала, повиснув на плечах любовника.'
+    else:
+        pass
+    player.say 'Стена. Стена и запрет во время занятий выхода из школы. Только это спасёт мать отечественной демократии!'
+    $ player.incLust(15)
+    $ move(curloc, 15)

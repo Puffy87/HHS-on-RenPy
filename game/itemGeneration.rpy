@@ -10,6 +10,13 @@ init python:
     napkin.durability = 10
     napkin.type = 'tool'
     
+    mat = Tool(purpose = 'clean')
+    mat.name = _('Циновка')
+    mat.cost = 1500
+    mat.picto = 'pic/items/mat.jpg'
+    mat.durability = 1000
+    mat.type = 'hidden'
+    
     clubPanties = Tool(purpose = 'sell')
     clubPanties.name = _('Поношенные трусики')
     clubPanties.cost = 100

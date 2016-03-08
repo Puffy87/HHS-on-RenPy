@@ -173,9 +173,9 @@ screen stats_screen:
 
     vbox xalign 0.99 yalign 0.0:
         if minute < 10:
-            $ temtime = '%s:0%s' % (hour, minute)
+            $ temtime = '{color=#33E7FF}%s:0%s' % (hour, minute)
         else:
-            $ temtime = '%s:%s' % (hour, minute)
+            $ temtime = '{color=#33E7FF}%s:%s' % (hour, minute)
         text '[temtime]' style style.mytimer xalign 0.99
         null height 10
         text '{u}Промотать:{/u}' style style.param xalign 0.99
@@ -219,7 +219,7 @@ screen stats_screen:
             else:
                 null
 
-        text '{u}Действия:{/u}' style style.param xalign 0.99
+        # text '{u}Действия:{/u}' style style.param xalign 0.99
         for lab, act, req in loc_btn :
             if req:
                 if lab[:3] != '{i}':
@@ -405,7 +405,7 @@ screen wardrobe:
     fixed :
         add 'pic/bg.png'
         if development == 0:
-            add 'pic/events/various/undress.png' at Move((0.8, 2.0), (0.8, 0.8), 0.5, xanchor='center', yanchor='center')
+            add im.FactorScale('pic/events/various/undress.png',0.7) at Move((0.8, 2.0), (0.8, 0.8), 0.5, xanchor='center', yanchor='center')
 
         key "game_menu" action Function(move, curloc)
         textbutton _('Назад') action Function(move, curloc)

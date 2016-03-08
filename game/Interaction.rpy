@@ -326,7 +326,7 @@ screen show_stat:
             if development == 1:
                 textbutton 'Карманы' xminimum 200 action Show('inventory_clothing_char')
             null height 10
-            text '{u}Вы видите\nу собеседника:{/u}'style style.param xsize 200 text_align 0.5 xalign 0.5
+            text 'Вы видите\nу собеседника:'style style.param xsize 200 text_align 0.5 xalign 0.5
             null height 10
             for z in getWearList(interactionObj):
                 if z != 'none':
@@ -334,7 +334,7 @@ screen show_stat:
                         xalign 0.5
                         imagebutton:
                             idle im.FactorScale(z.picto, 0.3)
-                            hover im.FactorScale(z.picto, 0.35)
+                            hover im.FactorScale(z.picto, 0.3)
                             action NullAction()
                             hovered [SetVariable('tooltip', '{u}'+z.name+ '{/u}\n' + z.description), Function(popap_pos, 'p'), Show('popup_s')]
                             unhovered [Hide('popup_s')]

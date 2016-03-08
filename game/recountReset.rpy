@@ -79,7 +79,7 @@ init python:
 
             if char in studs:
                 # Подтягиваем или уменьшаем разврат до учительского уровня. Чем сильнее разница, тем выше изменениия. В будущем УБРАТЬ и сделать через статусы.
-                char.incCorr((getPar(teachers,'corr') - char.getCorr())/10)
+                # char.incCorr((getPar(teachers,'corr') - char.getCorr())/10)
                 # Добавление трусов, если их нет у чара.
                 if char.getSex() != 'male' and char.getItem(studpantiesF.name) == False:
                     char.addItem(studpantiesF)

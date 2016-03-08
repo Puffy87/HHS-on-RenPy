@@ -93,7 +93,7 @@ init:
     
     define farmer = Character("Сидор Тяпкович", who_color="#0553FA", show_side_image = im.Scale("pic/otherChars/farmer_picto.jpg",160, 160, xalign=0.0, yalign= 1.0), window_left_padding = 170)
     
-    define female = Character("Женщина", who_color="#c8ffc8")
+    define female = Character("Женщина", who_color="#c8ffc8", show_side_image = im.Scale("pic/otherChars/anyWoman.png",160, 160, xalign=0.0, yalign= 1.0), window_left_padding = 170)
     
     define minister = Character("Григорий Совдепович", who_color="#0553FA", show_side_image = im.Scale("pic/otherChars/minister_picto.jpg",160, 160, xalign=0.0, yalign= 1.0), window_left_padding = 170)
     
